@@ -9,10 +9,34 @@ class DropBoxController {
         this.nameFileEl = this.snackModalEl.querySelector('.filename');
         this.timeLeftEl = this.snackModalEl.querySelector('.timeleft')
 
-
+        this.connectionFirebase();
         this.initEvents();
 
     }
+
+    connectionFirebase(){
+
+        
+
+        let config = {
+
+            apiKey: "AIzaSyDyVYlghbHwnsyucC9k0zwPAs00sWwLye8",
+            authDomain: "dropbox-clone-3ae7d.firebaseapp.com",
+            databaseURL: "https://dropbox-clone-3ae7d-default-rtdb.firebaseio.com",
+            projectId: "dropbox-clone-3ae7d",
+            storageBucket: "dropbox-clone-3ae7d.appspot.com",
+            messagingSenderId: "866776601451",
+            appId: "1:866776601451:web:7784cb16f425cca69df22e",
+            measurementId: "G-FHM51Z75PC"
+        
+          };
+
+          firebase.initializeApp(config)
+
+        
+        
+
+    };
 
     initEvents() {
 
@@ -24,14 +48,44 @@ class DropBoxController {
 
         this.inputFilesEl.addEventListener('change', e => {
 
+            this.btnSendFileEl.disabled = true;
 
-            this.uploadTask(e.target.files);
+            this.uploadTask(e.target.files).then(responses => { 
+
+                responses.forEach(resp => { 
+
+                   
+
+                    this.getFirebaseRef().push().set(resp.files['input-file'])
+
+                });
+
+                this.uploadComplete();
+
+            }).catch(err=> { 
+
+                this.uploadComplete();
+                console.error(err)
+            });
 
             this.modalShow();
 
-            this.inputFilesEl.value = '';
+            
 
         });
+
+    };
+
+    uploadComplete(){ 
+        this.modalShow(false);
+        this.inputFilesEl.value = '';
+        this.btnSendFileEl.disabled = false;
+    }
+
+    getFirebaseRef(){
+
+        return firebase.database().ref('files')
+
 
     };
 
@@ -55,13 +109,13 @@ class DropBoxController {
 
                 ajax.onload = event => {
 
-                    this.modalShow(false);
+                    
 
                     try {
                         resolve(JSON.parse(ajax.responseText));
                     } catch (e) {
 
-                        this.modalShow(false);
+                        
 
                         reject(e);
 
