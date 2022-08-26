@@ -70,10 +70,9 @@ class DropBoxController {
             formData.append('path', file.path)
             formData.append('key', key)
 
-            promises.push(this.ajax('/file', 'DELETE', formData));
-
-            
-        });
+            promises.push(this.ajax('/file', 'DELETE', formData))   
+                        
+            });
 
         return Promise.all(promises);
 
@@ -738,4 +737,4 @@ class DropBoxController {
 
     };
 
-}
+};
