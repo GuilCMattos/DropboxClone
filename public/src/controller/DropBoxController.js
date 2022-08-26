@@ -181,6 +181,7 @@ class DropBoxController {
 
                 this.getFirebaseRef().push().set({
                     name,
+                    surname: name,
                     type: 'folder',
                     path:this.currentFolder.join('/')
                 })
@@ -219,12 +220,12 @@ class DropBoxController {
 
             let file = JSON.parse(li.dataset.file);
 
-            let name = prompt('Renomear o arquivo:', file.name)
+            let name = prompt('Renomear o arquivo:', file.surname)
 
 
             if(name) { 
 
-                file.name = name
+                file.surname = name
 
                 this.getFirebaseRef().child(li.dataset.key).set(file)
 
@@ -273,6 +274,7 @@ class DropBoxController {
                responses.forEach((resp)=> { 
                     this.getFirebaseRef().push().set({
                         name: resp.name,
+                        surname: resp.name,
                         type: resp.contentType,
                         path: resp.downloadURLs[0],
                         size: resp.size
@@ -663,7 +665,7 @@ class DropBoxController {
 
         li.innerHTML = `
         ${this.getFileIconView(file)}
-        <div class="name text-center">${file.name}</div>
+        <div class="name text-center">${file.surname}</div>
         
         `
 
